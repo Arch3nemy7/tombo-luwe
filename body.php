@@ -1,5 +1,5 @@
 <div class="main main-raised">
-	<div class="container mainn-raised" style="width:100%;">
+	<div class="container mainn-raised" style="width:100%; padding: 50px;">
 
 		<div id="myCarousel" class="carousel slide" data-ride="carousel">
 			<!-- Indicators -->

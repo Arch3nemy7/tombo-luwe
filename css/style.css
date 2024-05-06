@@ -525,6 +525,8 @@ textarea.input {
 
 .header-logo {
   float: left;
+  font-family: Montserrat-Regular;
+
 }
 
 .header-logo .logo img {
@@ -2300,6 +2302,7 @@ textarea.input {
   .header-logo {
     float: none;
     text-align: center;
+    font-family: Montserrat-Regular;
   }
   .header-logo .logo {
     display: inline-block;

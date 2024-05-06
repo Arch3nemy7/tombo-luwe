@@ -35,12 +35,12 @@ include 'header.php';
 		};
 	})(window);
 </script>
-<div class="main main-raised">
+<div class="main main-raised;" style="margin-top: 0px;">
 
 	<div class="section">
 		<!-- container -->
 		<div class="container">
-			<!-- row -->
+			<!-- row -->	
 			<div class="row">
 				<!-- ASIDE -->
 				<div id="aside" class="col-md-3">
