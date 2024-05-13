@@ -189,7 +189,7 @@ session_start();
 					<div class="col-md-3">
 						<div class="header-logo">
 							<a href="index.php" class="logo">
-								<font style="font-style:normal; font-size: 33px;color: white;font-family: serif">
+								<font style="font-style:normal; font-size: 33px;color: white;font-family: Montserrat,sans-serif; font-weight: bold;">
 									Tombo Luwe
 								</font>
 
