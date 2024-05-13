@@ -12,10 +12,10 @@ include "topheader.php";
       <a>
         <?php  //success message
         if (isset($_POST['success'])) {
-          $success = $_POST["success"];
-          echo "<h1 style='color:#0C0'>Your Product was added successfully &nbsp;&nbsp;  <span class='glyphicon glyphicon-ok'></h1></span>";
+            $success = $_POST["success"];
+            echo "<h1 style='color:#0C0'>Your Product was added successfully &nbsp;&nbsp;  <span class='glyphicon glyphicon-ok'></h1></span>";
         }
-        ?></a>
+?></a>
     </div>
     <div class="col-md-14">
       <div class="card ">
@@ -39,14 +39,14 @@ include "topheader.php";
               </thead>
               <tbody>
                 <?php
-                $result = pg_query($con, "select * from user_info") or die("query 1 incorrect.....");
+        $result = pg_query($con, "select * from user_info") or die("query 1 incorrect.....");
 
-                while (list($user_id, $first_name, $last_name, $email, $password, $phone, $address1, $address2) = pg_fetch_array($result)) {
-                  echo "<tr><td>$user_id</td><td>$first_name</td><td>$last_name</td><td>$email</td><td>$password</td><td>$phone</td><td>$address1</td><td>$address2</td>
+while (list($user_id, $first_name, $last_name, $email, $password, $phone, $address1, $address2) = pg_fetch_array($result)) {
+    echo "<tr><td>$user_id</td><td>$first_name</td><td>$last_name</td><td>$email</td><td>$password</td><td>$phone</td><td>$address1</td><td>$address2</td>
 
                         </tr>";
-                }
-                ?>
+}
+?>
               </tbody>
             </table>
             <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
@@ -77,19 +77,19 @@ include "topheader.php";
                 </thead>
                 <tbody>
                   <?php
-                  $result = pg_query($con, "select * from categories") or die("query 1 incorrect.....");
-                  $i = 1;
-                  while (list($cat_id, $cat_title) = pg_fetch_array($result)) {
-                    $sql = "SELECT COUNT(*) AS count_items FROM products WHERE product_cat=$i";
-                    $query = pg_query($con, $sql);
-                    $row = pg_fetch_array($query);
-                    $count = $row["count_items"];
-                    $i++;
-                    echo "<tr><td>$cat_id</td><td>$cat_title</td><td>$count</td>
+  $result = pg_query($con, "select * from categories") or die("query 1 incorrect.....");
+$i = 1;
+while (list($cat_id, $cat_title) = pg_fetch_array($result)) {
+    $sql = "SELECT COUNT(*) AS count_items FROM products WHERE product_cat=$i";
+    $query = pg_query($con, $sql);
+    $row = pg_fetch_array($query);
+    $count = $row["count_items"];
+    $i++;
+    echo "<tr><td>$cat_id</td><td>$cat_title</td><td>$count</td>
 
                         </tr>";
-                  }
-                  ?>
+}
+?>
                 </tbody>
               </table>
               <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
@@ -119,20 +119,20 @@ include "topheader.php";
                 </thead>
                 <tbody>
                   <?php
-                  $result = pg_query($con, "select * from brands") or die("query 1 incorrect.....");
-                  $i = 1;
-                  while (list($brand_id, $brand_title) = pg_fetch_array($result)) {
+$result = pg_query($con, "select * from brands") or die("query 1 incorrect.....");
+$i = 1;
+while (list($brand_id, $brand_title) = pg_fetch_array($result)) {
 
-                    $sql = "SELECT COUNT(*) AS count_items FROM products WHERE product_brand=$i";
-                    $query = pg_query($con, $sql);
-                    $row = pg_fetch_array($query);
-                    $count = $row["count_items"];
-                    $i++;
-                    echo "<tr><td>$brand_id</td><td>$brand_title</td><td>$count</td>
+    $sql = "SELECT COUNT(*) AS count_items FROM products WHERE product_brand=$i";
+    $query = pg_query($con, $sql);
+    $row = pg_fetch_array($query);
+    $count = $row["count_items"];
+    $i++;
+    echo "<tr><td>$brand_id</td><td>$brand_title</td><td>$count</td>
 
                         </tr>";
-                  }
-                  ?>
+}
+?>
                 </tbody>
               </table>
               <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
@@ -164,12 +164,12 @@ include "topheader.php";
                 <?php
                 $result = pg_query($con, "select * from email_info") or die("query 1 incorrect.....");
 
-                while (list($brand_id, $brand_title) = pg_fetch_array($result)) {
-                  echo "<tr><td>$brand_id</td><td>$brand_title</td>
+while (list($brand_id, $brand_title) = pg_fetch_array($result)) {
+    echo "<tr><td>$brand_id</td><td>$brand_title</td>
 
                         </tr>";
-                }
-                ?>
+}
+?>
               </tbody>
             </table>
             <div class="ps__rail-x" style="left: 0px; bottom: 0px;">

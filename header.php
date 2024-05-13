@@ -64,7 +64,6 @@ session_start();
 			/* Chrome 10-25, Safari 5.1-6 */
 			background: linear-gradient(to right, #a30707, #cc7a1d);
 			/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-			font-family: Montserrat-Regular;
 
 
 		}
@@ -190,7 +189,7 @@ session_start();
 					<div class="col-md-3">
 						<div class="header-logo">
 							<a href="index.php" class="logo">
-								<font style="font-style:normal; font-size: 33px;color: white;font-family: Montserrat,sans-serif; font-weight: bold;">
+								<font style="font-style:normal; font-size: 33px;color: white;font-family: serif">
 									Tombo Luwe
 								</font>
 

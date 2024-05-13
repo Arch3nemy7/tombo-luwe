@@ -1,14 +1,12 @@
 <?php
 include "header.php";
 ?>
-
-
 <section class="section">
-<div class="container-fluid">	
-    <div id="cart_checkout">
+    <div class="container-fluid">
+        <div id="cart_checkout">
+        </div>
     </div>
-</div>
-</section>	
+</section>
 <?php
 include "newslettter.php";
 include "footer.php";

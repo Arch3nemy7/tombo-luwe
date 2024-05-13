@@ -3,20 +3,20 @@ session_start();
 include("../db.php");
 error_reporting(0);
 if (isset($_GET['action']) && $_GET['action'] != "" && $_GET['action'] == 'delete') {
-  $product_id = $_GET['product_id'];
-  ///////picture delete/////////
-  $result = pg_query($con, "select product_image from products where product_id='$product_id'")
-    or die("query is incorrect...");
+    $product_id = $_GET['product_id'];
+    ///////picture delete/////////
+    $result = pg_query($con, "select product_image from products where product_id='$product_id'")
+      or die("query is incorrect...");
 
-  list($picture) = pg_fetch_array($result);
-  $path = "../product_images/$picture";
+    list($picture) = pg_fetch_array($result);
+    $path = "../product_images/$picture";
 
-  if (file_exists($path) == true) {
-    unlink($path);
-  } else {
-  }
-  /*this is delet query*/
-  pg_query($con, "delete from products where product_id='$product_id'") or die("query is incorrect...");
+    if (file_exists($path) == true) {
+        unlink($path);
+    } else {
+    }
+    /*this is delet query*/
+    pg_query($con, "delete from products where product_id='$product_id'") or die("query is incorrect...");
 }
 
 ///pagination
@@ -24,9 +24,9 @@ if (isset($_GET['action']) && $_GET['action'] != "" && $_GET['action'] == 'delet
 $page = $_GET['page'];
 
 if ($page == "" || $page == "1") {
-  $page1 = 0;
+    $page1 = 0;
 } else {
-  $page1 = ($page * 10) - 10;
+    $page1 = ($page * 10) - 10;
 }
 include "sidenav.php";
 include "topheader.php";
@@ -69,16 +69,16 @@ include "topheader.php";
 
                 $result = pg_query($con, "select product_id,product_image, product_title,product_price from products  where  product_cat=1  Limit $page1,12") or die("query 1 incorrect.....");
 
-                while (list($product_id, $image, $product_name, $price) = pg_fetch_array($result)) {
-                  echo "<tr><td><img src='../product_images/$image' style='width:50px; height:50px; border:groove #000'></td><td>$product_name</td>
+while (list($product_id, $image, $product_name, $price) = pg_fetch_array($result)) {
+    echo "<tr><td><img src='../product_images/$image' style='width:50px; height:50px; border:groove #000'></td><td>$product_name</td>
                         <td>$price</td>
                         <td>
 
                         <a class=' btn btn-success' href='clothes_list.php?product_id=$product_id&action=delete'>Delete</a>
                         </td></tr>";
-                }
+}
 
-                ?>
+?>
               </tbody>
             </table>
             <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
@@ -102,17 +102,19 @@ include "topheader.php";
           //counting paging
 
           $paging = pg_query($con, "select product_id,product_image, product_title,product_price from products");
-          $count = pg_num_rows($paging);
+$count = pg_num_rows($paging);
 
-          $a = $count / 10;
-          $a = ceil($a);
+$a = $count / 10;
+$a = ceil($a);
 
-          for ($b = 1; $b <= $a; $b++) {
-          ?>
-            <li class="page-item"><a class="page-link" href="productlist.php?page=<?php echo $b; ?>"><?php echo $b . " "; ?></a></li>
+for ($b = 1; $b <= $a; $b++) {
+    ?>
+          <li class="page-item"><a class="page-link"
+              href="productlist.php?page=<?php echo $b; ?>"><?php echo $b . " "; ?></a>
+          </li>
           <?php
-          }
-          ?>
+}
+?>
           <li class="page-item">
             <a class="page-link" href="#" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
