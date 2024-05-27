@@ -2,10 +2,10 @@
 session_start();
 include("../db.php");
 if (isset($_GET['action']) && $_GET['action'] != "" && $_GET['action'] == 'delete') {
-  $user_id = $_GET['user_id'];
+    $user_id = $_GET['user_id'];
 
-  /*this is delet quer*/
-  pg_query($con, "delete from user_info where user_id='$user_id'") or die("query is incorrect...");
+    /*this is delet quer*/
+    pg_query($con, "delete from user_info where user_id='$user_id'") or die("query is incorrect...");
 }
 
 include "sidenav.php";
@@ -33,12 +33,12 @@ include "topheader.php";
                 <?php
                 $result = pg_query($con, "select user_id, email, password from user_info") or die("query 2 incorrect.......");
 
-                while (list($user_id, $user_name, $user_password) =
-                  pg_fetch_array($result)
-                ) {
-                  echo "<tr><td>$user_name</td><td>$user_password</td>";
+while (list($user_id, $user_name, $user_password) =
+  pg_fetch_array($result)
+) {
+    echo "<tr><td>$user_name</td><td>$user_password</td>";
 
-                  echo "<td>
+    echo "<td>
                         <a href='edituser.php?user_id=$user_id' type='button' rel='tooltip' title='' class='btn btn-info btn-link btn-sm' data-original-title='Edit User'>
                                 <i class='material-icons'>edit</i>
                               <div class='ripple-container'></div></a>
@@ -46,9 +46,9 @@ include "topheader.php";
                                 <i class='material-icons'>close</i>
                               <div class='ripple-container'></div></a>
                         </td></tr>";
-                }
-                pg_close($con);
-                ?>
+}
+pg_close($con);
+?>
               </tbody>
             </table>
             <div class="ps__rail-x" style="left: 0px; bottom: 0px;">

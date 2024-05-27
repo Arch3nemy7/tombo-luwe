@@ -1,9 +1,9 @@
  <?php
   session_start();
-  include("../db.php");
-  include "sidenav.php";
-  include "topheader.php";
-  if (isset($_POST['btn_save'])) {
+include("../db.php");
+include "sidenav.php";
+include "topheader.php";
+if (isset($_POST['btn_save'])) {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
@@ -16,10 +16,10 @@
       or die("Query 1 is inncorrect........");
     header("location: manage_users.php");
     pg_close($con);
-  }
+}
 
 
-  ?>
+?>
  <!-- End Navbar -->
  <div class="content">
    <div class="container-fluid">
@@ -94,5 +94,5 @@
    </div>
  </div>
  <?php
-  include "footer.php";
-  ?>
+include "footer.php";
+?>
