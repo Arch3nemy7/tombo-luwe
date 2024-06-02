@@ -1,90 +1,83 @@
 <?php
-// Start the session
 session_start();
-
-// Include the database connection file
 include "db.php";
 
-// Check if user is logged in
 if (isset($_SESSION["uid"])) {
-    // Retrieve form data
-    $f_name = isset($_POST["firstname"]) ? $_POST["firstname"] : '';
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
-    $address = isset($_POST['address']) ? $_POST['address'] : '';
-    $city = isset($_POST['city']) ? $_POST['city'] : '';
+    $user_id = (int)$_SESSION["uid"];
+    $sql = "SELECT * FROM user_info WHERE user_id=$1";
+    $query = pg_query_params($con, $sql, array($user_id));
+    $user_info = pg_fetch_assoc($query);
+
+    $f_name = isset($_POST["firstname"]) ? $_POST["firstname"] : $user_info["first_name"] . ' ' . $user_info["last_name"];
+    $email = isset($_POST['email']) ? $_POST['email'] : $user_info["email"];
+    $address = isset($_POST['address']) ? $_POST['address'] : $user_info["address1"];
+    $city = isset($_POST['city']) ? $_POST['city'] : $user_info["address2"];
     $state = isset($_POST['state']) ? $_POST['state'] : '';
-    $zip = isset($_POST['zip']) ? (int)$_POST['zip'] : 0; // Cast zip to integer
+    $zip = isset($_POST['zip']) ? (int)$_POST['zip'] : 0;
     $cardname = isset($_POST['cardname']) ? $_POST['cardname'] : '';
     $cardnumber = isset($_POST['cardNumber']) ? $_POST['cardNumber'] : '';
+    $cvv = isset($_POST['cvv']) ? (int)$_POST['cvv'] : 0;
     $expdate = isset($_POST['expdate']) ? $_POST['expdate'] : '';
-    $cvv = isset($_POST['cvv']) ? (int)$_POST['cvv'] : 0; // Cast cvv to integer
-    $user_id = (int)$_SESSION["uid"]; // Cast user_id to integer
-    $cardnumberstr = (string)$cardnumber;
-    $total_count = isset($_POST['total_count']) ? (int)$_POST['total_count'] : 0; // Cast total_count to integer
-    $prod_total = isset($_POST['total_price']) ? (int)$_POST['total_price'] : 0; // Cast prod_total to integer
 
-    // Query to get the latest order ID
-    $sql0 = "SELECT MAX(order_id) AS max_val FROM orders_info";
-    $run_query = pg_query($con, $sql0);
-
-    // Check if any orders exist
-    if (pg_num_rows($run_query) > 0) {
-        // Fetch the latest order ID and increment it
-        $row = pg_fetch_array($run_query);
-        $order_id = $row["max_val"] + 1;
-    } else {
-        // No orders exist, set order ID to 1
-        $order_id = 1;
-    }
-
-    // SQL query to insert order information into database
-    $sql = "INSERT INTO orders_info (order_id, user_id, f_name, email, address, city, state, zip, cardname, cardnumber, expdate, prod_count, total_amt, cvv) VALUES ($order_id, $user_id, '$f_name', '$email', '$address', '$city', '$state', $zip, '$cardname', '$cardnumberstr', '$expdate', $total_count, $prod_total, $cvv)";
+    $total_amt = isset($_POST['total_price']) ? (int)$_POST['total_price'] : 0;
+    $product_ids = isset($_POST['product_id']) ? $_POST['product_id'] : array();
 
     try {
-        // Execute the query to insert order information
-        if (pg_query($con, $sql)) {
-            // Loop through each product in the order
-            for ($i = 1; $i <= $total_count; $i++) {
-                // Retrieve product details from the form
-                $prod_id = isset($_POST['prod_id_' . $i]) ? (int)$_POST['prod_id_' . $i] : 0; // Cast prod_id to integer
-                $prod_price = isset($_POST['prod_price_' . $i]) ? (int)$_POST['prod_price_' . $i] : 0; // Cast prod_price to integer
-                $prod_qty = isset($_POST['prod_qty_' . $i]) ? (int)$_POST['prod_qty_' . $i] : 0; // Cast prod_qty to integer
+        pg_query($con, "BEGIN");
 
-                // Calculate subtotal for the product
-                $sub_total = $prod_price * $prod_qty;
+        $sql_max_order_info = "SELECT COALESCE(MAX(order_id), 0) AS max_order_id FROM orders_info";
+        $result_max_order_info = pg_query($con, $sql_max_order_info);
+        $row_max_order_info = pg_fetch_assoc($result_max_order_info);
+        $max_order_info_id = $row_max_order_info['max_order_id'];
 
-                // SQL query to insert order product into database
-                $sql1 = "INSERT INTO order_products (order_pro_id, order_id, product_id, qty, amt) VALUES (NULL, $order_id, $prod_id, $prod_qty, $sub_total)";
+        $sql_max_order = "SELECT COALESCE(MAX(order_id), 0) AS max_order_id FROM orders";
+        $result_max_order = pg_query($con, $sql_max_order);
+        $row_max_order = pg_fetch_assoc($result_max_order);
+        $max_order_id = $row_max_order['max_order_id'];
 
-                // Execute the query to insert order product
-                if (!pg_query($con, $sql1)) {
-                    throw new Exception("Error inserting order product: " . pg_last_error($con));
-                }
-            }
+        $order_info_id = max($max_order_info_id, $max_order_id) + 1;
 
-            // Remove items from the cart after successful checkout
-            if (isset($_SESSION["uid"])) {
-                $sql_remove_cart = "DELETE FROM cart WHERE user_id = $user_id";
-            } else {
-                $ip_add = getenv("REMOTE_ADDR");
-                $sql_remove_cart = "DELETE FROM cart WHERE ip_add = '$ip_add' AND user_id < 0";
-            }
-
-            if (pg_query($con, $sql_remove_cart)) {
-                // Redirect to index.php after successful checkout and cart clearing
-                header("Location: index.php");
-                exit();
-            } else {
-                throw new Exception("Error removing items from cart: " . pg_last_error($con));
-            }
-        } else {
-            throw new Exception("Error inserting order information: " . pg_last_error($con));
+        $sql_orders_info = "INSERT INTO orders_info (order_id, user_id, f_name, email, address, city, state, zip, cardname, cardnumber, expdate, total_amt, cvv) 
+                            VALUES ($order_info_id, $user_id, '$f_name', '$email', '$address', '$city', '$state', '$zip', '$cardname', '$cardnumber', '$expdate', $total_amt, $cvv)";
+        $result_orders_info = pg_query($con, $sql_orders_info);
+        if (!$result_orders_info) {
+            throw new Exception("Error inserting into orders_info: " . pg_last_error($con));
         }
+
+        // Insert into `orders` (refined and corrected)
+        $trx_id = 'trx_' . $order_info_id;
+        $p_status = 'Pending';
+        $stmt = pg_prepare($con, "insert_order", "INSERT INTO orders (order_id, user_id, product_id, qty, trx_id, p_status) 
+                           VALUES ($1, $2, $3, $4, $5, $6)");
+
+        foreach ($product_ids as $product_id) {
+            $prod_count = (int)$_POST['product_qty_' . $product_id];
+            $result_orders = pg_execute($con, "insert_order", array($order_info_id, $user_id, $product_id, $prod_count, $trx_id, $p_status));
+
+            if (!$result_orders) {
+                throw new Exception("Error inserting into orders: " . pg_last_error($con));
+            }
+        }
+
+        $sql_remove_cart = isset($_SESSION["uid"]) ? 
+            "DELETE FROM cart WHERE user_id = $1" : 
+            "DELETE FROM cart WHERE ip_add = $1 AND user_id < 0";
+        $params_remove_cart = isset($_SESSION["uid"]) ? array($user_id) : array(getenv("REMOTE_ADDR"));
+        $result_remove_cart = pg_query_params($con, $sql_remove_cart, $params_remove_cart);
+        if (!$result_remove_cart) {
+            throw new Exception("Error removing items from cart: " . pg_last_error($con));
+        }
+
+        pg_query($con, "COMMIT");
+
+        header("Location: index.php");
+        exit();
     } catch (Exception $e) {
-        // Handle exceptions and display error message
-        echo "Error processing checkout: " . $e->getMessage();
+        pg_query($con, "ROLLBACK");
+        echo "Error processing checkout: " . $e->getMessage(); // Print PostgreSQL error
+        echo "<br>SQL: " . $sql_orders_info;
     }
 } else {
-    // Redirect to index.php if user is not logged in
     echo "<script>window.location.href='index.php'</script>";
 }
+?>
