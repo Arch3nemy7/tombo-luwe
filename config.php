@@ -8,7 +8,7 @@ $errors = array();
 
 // connect to the database
 $db_username = "postgres";
-$db_password = "robyarjuna17";
+$db_password = "";
 $db = pg_connect("host=localhost dbname=onlineshop user=$db_username password=$db_password");
 if (!$db) {
   die("Connection failed: " . pg_connect_error());
